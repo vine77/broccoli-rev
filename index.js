@@ -15,6 +15,7 @@ function Rev(inputTree, options) {
   this.revision = options.revision || null;
   this.hashLength = options.hashLength || 8;
   this.manifestFile = options.manifestFile || '/rev-manifest.json';
+  this.separator = options.separator || '-';
   this.inputTree = inputTree;
 }
 
@@ -25,6 +26,7 @@ Rev.prototype.write = function (readTree, destDir) {
   var revision = this.revision;
   var hashLength = this.hashLength;
   var manifestFile = this.manifestFile;
+  var separator = this.separator;
 
   return readTree(this.inputTree).then(function (srcDir) {
     var manifestMap = {};
@@ -37,7 +39,7 @@ Rev.prototype.write = function (readTree, destDir) {
         return;
 
       var fileRev = revision || makeHash(getFileContents(srcFile, stat)).substring(0, hashLength);
-      var revvedFile = addSuffixBeforeExt(file, '-' + fileRev);
+      var revvedFile = addSuffixBeforeExt(file, separator + fileRev);
       var destFile = path.join(destDir, revvedFile);
 
       mkdirp.sync(path.dirname(destFile));
